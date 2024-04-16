@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Resumen Mensual</h1>
+    <img src="{% static 'resumen_mensual.png' %}" alt="Resumen Mensual">
+
+    <h2>Ingresar o Editar Presupuesto Mensual</h2>
+    <a href="{% url 'ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a>
+
+    <h2>Agregar Gastos</h2>
+    <a href="{% url 'agregar_gastos' %}">Agregar Gastos</a>
+
+    <h2>Tabla de Gastos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Costo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for gasto in tabla_gastos %}
+            <tr>
+                <td>{{ gasto.categoria }}</td>
+                <td>{{ gasto.descripcion }}</td>
+                <td>{{ gasto.cantidad }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
