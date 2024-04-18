@@ -97,7 +97,7 @@ def agregar_gastos(request):
 def eliminar_gasto(request, gasto_id):
     gastos = GastoMensual.objects.filter(usuario=request.user)
     if request.method == 'POST':
-        #gasto_id = request.POST.get('gasto_id')
+        gasto_id = request.POST.get('gasto_id')
         gasto = GastoMensual.objects.get(id=gasto_id)  #get_object_or_404(GastoMensual, id=gasto_id)
         gasto.delete()
         return redirect('mi_gestor:home')

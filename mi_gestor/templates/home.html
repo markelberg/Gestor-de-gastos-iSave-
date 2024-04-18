@@ -10,16 +10,14 @@
     <h2>Presupuesto Mensual</h2>
         <a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a>
 
-        <div style="height: 80px;"></div>
+        <div style="height: 60px;"></div>
         <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
         <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
     <h2>Gasto Mensual</h2>
-        <a href="{% url 'mi_gestor:agregar_gastos' %}">Agregar Gastos</a>
-        {% if gastos %}
-            <a href="{% url 'mi_gestor:eliminar_gasto' gastos.0.id %}">Eliminar Gasto</a>
-        {% endif %}
+        <a href="{% url 'mi_gestor:agregar_gastos' %}">Agregar Gastos</a><br>
+        <a href="{% url 'mi_gestor:eliminar_gasto' gastos.0.id %}" >Eliminar Gasto</a>
 
-        <div style="height: 80px;"></div>
+        <div style="height: 60px;"></div>
         <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
     <h2>Tabla de Gastos</h2>
         <table border="1">
