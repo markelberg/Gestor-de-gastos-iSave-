@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Eliminar Gasto</h1>
-    <form action="{% url 'mi_gestor:eliminar_gasto' gasto.id %}" method="post">
+    <form action="{% url 'mi_gestor:eliminar_gasto' gasto_id %}" method="post">
         {% csrf_token %}
         <p>Selecciona el gasto que deseas eliminar:</p>
         {% for gasto in gastos %}
