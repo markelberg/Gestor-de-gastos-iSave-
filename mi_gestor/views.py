@@ -1,13 +1,15 @@
 import matplotlib.pyplot as plt
-from django.shortcuts import render, redirect
+import datetime
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import PresupuestoForm, AgregarGastoForm
-from .models import PresupuestoMensual, Categoria, Gasto
 from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+
+from .forms import PresupuestoForm, AgregarGastoForm
+from .models import PresupuestoMensual, Categoria, GastoMensual
 
 
 def index(request):
@@ -29,32 +31,32 @@ def index(request):
 
 @login_required
 def home(request):
-    presupuestos = PresupuestoMensual.objects.filter(usuario=request.user)
-    meses = [presupuesto.mes for presupuesto in presupuestos]
-    cantidades = [float(presupuesto.cantidad) for presupuesto in presupuestos]
 
-    gastos_acumulados = []
-    for mes in meses:
-        gastos_mes = Gasto.objects.filter(usuario=request.user, fecha__month=mes).aggregate(total=Sum('cantidad'))['total']
-        gastos_acumulados.append(gastos_mes if gastos_mes else 0)
+    mes_actual = datetime.date.today().replace(day=1)
 
-    diferencia = [p - g for p, g in zip(cantidades, gastos_acumulados)]
-    
-    plt.figure(figsize=(10, 6))
-    plt.bar(meses, diferencia, color='blue')
-    plt.xlabel('Mes')
-    plt.ylabel('Diferencia (Presupuesto - Gastos acumulados)')
-    plt.title('Resumen mensual')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig('mi_gestor/media/resumen_mensual.png')
+    try:
+        presupuesto_mensual = PresupuestoMensual.objects.get(usuario=request.user, fecha=mes_actual)
+        presupuesto_mes_actual = presupuesto_mensual.cantidad
+    except PresupuestoMensual.DoesNotExist:
+        presupuesto_mes_actual = 0
 
-    gastos = Gasto.objects.filter(usuario=request.user)
+    gastos_mes_actual = GastoMensual.objects.filter(usuario=request.user, fecha__month=mes_actual.month, fecha__year=mes_actual.year).aggregate(total_mes=Sum('cantidad'))
+    total_mes_actual = round(gastos_mes_actual['total_mes'], 2) if gastos_mes_actual['total_mes'] else 0
+
+    diferencia = presupuesto_mes_actual - total_mes_actual
+
+    gastos = GastoMensual.objects.filter(usuario=request.user)
     presupuesto_url = '/ingresar_presupuesto/'
     agregar_gastos_url = '/agregar_gastos/'
 
-    return render(request, 'home.html', {'presupuesto_url': presupuesto_url,
-                                         'agregar_gastos_url': agregar_gastos_url, 'gastos': gastos})
+    return render(request, 'home.html', {
+        'presupuesto_url': presupuesto_url,
+        'agregar_gastos_url': agregar_gastos_url,
+        'gastos': gastos,
+        'presupuesto_mes_actual': presupuesto_mes_actual,
+        'total_mes_actual': total_mes_actual,
+        'diferencia': diferencia
+    })
 
 
 @login_required
@@ -62,12 +64,10 @@ def ingresar_presupuesto(request):
     if request.method == 'POST':
         form = PresupuestoForm(request.POST)
         if form.is_valid():
-            mes = form.cleaned_data['mes']
-            year = form.cleaned_data['year']
+            fecha = form.cleaned_data['fecha']
             cantidad = form.cleaned_data['cantidad']
 
-            presupuesto = form.save(commit=False)
-            presupuesto.usuario = request.user
+            presupuesto = PresupuestoMensual(fecha=fecha, cantidad=cantidad, usuario=request.user)
             presupuesto.save()
 
             return redirect('mi_gestor:home')
@@ -82,17 +82,8 @@ def agregar_gastos(request):
     if request.method == 'POST':
         form = AgregarGastoForm(request.POST)
         if form.is_valid():
-            categoria_nombre = form.cleaned_data['nueva_categoria']
-            categoria_existente = Categoria.objects.filter(nombre=categoria_nombre).exists()
-
-            if categoria_existente:
-                categoria = Categoria.objects.get(nombre=categoria_nombre)
-            else:
-                categoria = Categoria.objects.create(nombre=categoria_nombre)
-
             gasto = form.save(commit=False)
             gasto.usuario = request.user
-            gasto.categoria = categoria
             gasto.save()
 
             return redirect('mi_gestor:home')
@@ -100,3 +91,13 @@ def agregar_gastos(request):
         form = AgregarGastoForm()
 
     return render(request, 'agregar_gastos.html', {'form': form})
+
+
+@login_required
+def eliminar_gasto(request, gasto_id):
+    gasto = get_object_or_404(GastoMensual, id=gasto_id)
+    if request.method == 'POST':
+        gasto.delete()
+        return redirect('mi_gestor:home')
+    return render(request, 'eliminar_gasto.html', {'gasto': gasto})
+

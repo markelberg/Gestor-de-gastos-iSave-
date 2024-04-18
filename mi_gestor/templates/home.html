@@ -6,33 +6,47 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Resumen Mensual</h1>
 
-    <h2>Ingresar o Editar Presupuesto Mensual</h2>
-    <a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a>
+    <h2>Presupuesto Mensual</h2>
+        <a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a>
 
-    <h2>Agregar Gastos</h2>
-    <a href="{% url 'mi_gestor:agregar_gastos' %}">Agregar Gastos</a>
-
-    <div style="height: 80px;"></div>
-    <h2>Tabla de Gastos</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Categoría</th>
-                <th>Descripción</th>
-                <th>Cantidad</th>
-            </tr>
-        </thead>
-        <tbody>
+        <div style="height: 80px;"></div>
+        <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
+        <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
+    <h2>Gasto Mensual</h2>
+        <a href="{% url 'mi_gestor:agregar_gastos' %}">Agregar Gastos</a>
+        <ul>
             {% for gasto in gastos %}
-            <tr>
-                <td>{{ gasto.categoria }}</td>
-                <td>{{ gasto.descripcion }}</td>
-                <td>{{ gasto.cantidad }}</td>
-            </tr>
+                <li>
+                    {{ gasto.descripcion }} - {{ gasto.cantidad }} €
+                    <a href="{% url 'mi_gestor:eliminar_gasto' gasto.id %}">Eliminar</a>
+                </li>
             {% endfor %}
-        </tbody>
-    </table>
+        </ul>
+
+
+        <div style="height: 80px;"></div>
+        <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
+    <h2>Tabla de Gastos</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gasto in gastos %}
+                <tr>
+                    <td>{{ gasto.fecha }}</td>
+                    <td>{{ gasto.categoria }}</td>
+                    <td>{{ gasto.descripcion }}</td>
+                    <td>{{ gasto.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 </body>
 </html>
