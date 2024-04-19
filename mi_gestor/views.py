@@ -103,4 +103,3 @@ def eliminar_gasto(request, gasto_id):
         return redirect('mi_gestor:home')
     else:
         return render(request, 'eliminar_gasto.html', {'gastos': gastos, 'gasto_id': gasto_id})
-
