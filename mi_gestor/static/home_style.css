@@ -1,3 +1,9 @@
+header {
+    padding: 20px;
+    text-align: center;
+    margin-left: 200px;
+}
+
 body {
     font-family: Calibri, sans-serif;
     text-align: center;
@@ -18,15 +24,66 @@ table {
     width: 100%;
 }
 
+.table-container {
+    position: fixed;
+    bottom: 0;
+    width: 86%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 th, td {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2;
+th {
+    background-color: #f2f2f2
 }
 
 tr:hover {
     background-color: #ddd;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-right: 1px solid #ddd
+}
+
+.sidebar h2 {
+    border: 1px solid #ddd;
+    margin-top: 0; /* Elimina el margen superior del título */
+}
+
+.sidebar ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px; /* Espacio entre cada elemento de la lista */
+}
+
+.content {
+    flex-grow: 1;
+    margin-left: 220px;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between; /* Coloca los elementos al principio y al final del contenedor */
+}
+
+.block {
+    width: 48%;
+    border: 1px solid #ccc;
+    padding: 10px; /* Añade un relleno dentro de cada bloque */
+    box-sizing: border-box; /* Incluye el relleno y el borde en el tamaño total */
 }

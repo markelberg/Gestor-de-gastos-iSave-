@@ -8,39 +8,55 @@
     <link rel="stylesheet" type="text/css" href="{% static 'home_style.css' %}">
 </head>
 <body>
+    <header>
+        <h1>MI GESTOR</h1>
+    </header>
 
-    <h2>Presupuesto Mensual</h2>
-        <a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a>
+    <div class="sidebar">
+        <h2>Menú</h2>
+        <ul>
+            <li><a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a></li>
+            <li><a href="{% url 'mi_gestor:agregar_gasto' %}">Agregar Gasto</a></li>
+            <li><a href="{% url 'mi_gestor:eliminar_gasto' gastos.0.id %}">Eliminar Gasto</a></li>
+        </ul>
+    </div>
 
-        <div style="height: 60px;"></div>
-        <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
-        <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
-    <h2>Gasto Mensual</h2>
-        <a href="{% url 'mi_gestor:agregar_gastos' %}">Agregar Gastos</a><br>
-        <a href="{% url 'mi_gestor:eliminar_gasto' gastos.0.id %}" >Eliminar Gasto</a>
+     <div class="content">
+        <div class="header">
+            <div class="block">
+                <h2>Presupuesto Mensual</h2>
+                <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
+                <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
+            </div>
+            <div class="block">
+                <h2>Gasto Mensual</h2>
+                <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
+            </div>
+        </div>
 
-        <div style="height: 60px;"></div>
-        <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
-    <h2>Tabla de Gastos</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Categoría</th>
-                    <th>Descripción</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gasto in gastos %}
-                <tr>
-                    <td>{{ gasto.fecha }}</td>
-                    <td>{{ gasto.categoria }}</td>
-                    <td>{{ gasto.descripcion }}</td>
-                    <td>{{ gasto.cantidad }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-container">
+            <h2>Historial de Gastos</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Categoría</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gasto in gastos %}
+                    <tr>
+                        <td>{{ gasto.fecha }}</td>
+                        <td>{{ gasto.categoria }}</td>
+                        <td>{{ gasto.descripcion }}</td>
+                        <td>{{ gasto.cantidad }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

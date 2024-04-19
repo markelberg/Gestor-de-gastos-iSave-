@@ -45,13 +45,13 @@ def home(request):
 
     diferencia = presupuesto_mes_actual - total_mes_actual
 
-    gastos = GastoMensual.objects.filter(usuario=request.user)
+    gastos = GastoMensual.objects.filter(usuario=request.user).order_by('fecha')
     presupuesto_url = '/ingresar_presupuesto/'
-    agregar_gastos_url = '/agregar_gastos/'
+    agregar_gasto_url = '/agregar_gasto/'
 
     return render(request, 'home.html', {
         'presupuesto_url': presupuesto_url,
-        'agregar_gastos_url': agregar_gastos_url,
+        'agregar_gasto_url': agregar_gasto_url,
         'gastos': gastos,
         'presupuesto_mes_actual': presupuesto_mes_actual,
         'total_mes_actual': total_mes_actual,
@@ -78,7 +78,7 @@ def ingresar_presupuesto(request):
 
 
 @login_required
-def agregar_gastos(request):
+def agregar_gasto(request):
     if request.method == 'POST':
         form = AgregarGastoForm(request.POST)
         if form.is_valid():
@@ -90,7 +90,7 @@ def agregar_gastos(request):
     else:
         form = AgregarGastoForm()
 
-    return render(request, 'agregar_gastos.html', {'form': form})
+    return render(request, 'agregar_gasto.html', {'form': form})
 
 
 @login_required
@@ -98,7 +98,7 @@ def eliminar_gasto(request, gasto_id):
     gastos = GastoMensual.objects.filter(usuario=request.user)
     if request.method == 'POST':
         gasto_id = request.POST.get('gasto_id')
-        gasto = GastoMensual.objects.get(id=gasto_id)  #get_object_or_404(GastoMensual, id=gasto_id)
+        gasto = get_object_or_404(GastoMensual, id=gasto_id)
         gasto.delete()
         return redirect('mi_gestor:home')
     else:
