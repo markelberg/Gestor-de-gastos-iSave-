@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingresar/Editar Presupuesto</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'ingresar_presupuesto_style.css' %}">
 </head>
 <body>
+
     <h2>Ingresar o Editar Presupuesto Mensual</h2>
     <form method="post">
         {% csrf_token %}
