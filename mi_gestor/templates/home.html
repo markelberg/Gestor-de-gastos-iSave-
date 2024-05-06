@@ -6,14 +6,22 @@
     <title>Home</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'home_style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div class="header">
-        <h1>MI GESTOR</h1>
+        <div class="logo-left">
+            <img src="{% static 'img/logo2.png' %}" width="400px">
+        </div>
+        <h2 class="circle">iSave</h2>
+        <div class="logo-right">
+            <img src="{% static 'img/logo2.png' %}" width="400px">
+        </div>
     </div>
 
     <div class="sidebar">
-        <h2>Menú</h2>
+        <h2 class="title-menu">Menú</h2>
         <ul>
             <li><a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a></li>
             <li><a href="{% url 'mi_gestor:agregar_gasto' %}">Agregar Gasto</a></li>
@@ -24,18 +32,18 @@
      <div class="content">
         <div class="subheader">
             <div class="block">
-                <h2>Presupuesto Mensual</h2>
+                <h2 class="title2">Presupuesto Mensual</h2>
                 <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
                 <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
             </div>
             <div class="block">
-                <h2>Gasto Mensual</h2>
+                <h2 class="title2">Gasto Mensual</h2>
                 <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
             </div>
         </div>
 
         <div class="table-container">
-            <h2>Historial de Gastos</h2>
+            <h2 class="title2">Historial de Gastos</h2>
             <table border="1">
                 <thead>
                     <tr>
