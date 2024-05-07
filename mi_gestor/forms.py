@@ -24,3 +24,12 @@ class AgregarGastoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['categoria'].queryset = Categoria.objects.all()
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        nueva_categoria = cleaned_data.get('nueva_categoria')
+        if nueva_categoria:
+            # Si se proporciona una nueva categoría, se crea y se asigna al gasto
+            categoria_nueva, _ = Categoria.objects.get_or_create(nombre=nueva_categoria)
+            cleaned_data['categoria'] = categoria_nueva
+        return cleaned_data
