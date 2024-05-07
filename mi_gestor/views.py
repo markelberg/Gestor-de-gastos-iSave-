@@ -13,6 +13,7 @@ from .models import PresupuestoMensual, Categoria, GastoMensual
 
 
 def index(request):
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -40,27 +41,28 @@ def home(request):
     except PresupuestoMensual.DoesNotExist:
         presupuesto_mes_actual = 0
 
-    gastos_mes_actual = GastoMensual.objects.filter(usuario=request.user, fecha__month=mes_actual.month, fecha__year=mes_actual.year).aggregate(total_mes=Sum('cantidad'))
-    total_mes_actual = round(gastos_mes_actual['total_mes'], 2) if gastos_mes_actual['total_mes'] else 0
+    gastos_mes_actual = GastoMensual.objects.filter(usuario=request.user, fecha__month=mes_actual.month, fecha__year=mes_actual.year).order_by('fecha')
+    total_mes_actual = round(gastos_mes_actual.aggregate(total_mes=Sum('cantidad'))['total_mes'] or 0, 2)
 
     diferencia = presupuesto_mes_actual - total_mes_actual
 
-    gastos = GastoMensual.objects.filter(usuario=request.user).order_by('fecha')
     presupuesto_url = '/ingresar_presupuesto/'
     agregar_gasto_url = '/agregar_gasto/'
 
     return render(request, 'home.html', {
         'presupuesto_url': presupuesto_url,
         'agregar_gasto_url': agregar_gasto_url,
-        'gastos': gastos,
+        'gastos': gastos_mes_actual,
         'presupuesto_mes_actual': presupuesto_mes_actual,
         'total_mes_actual': total_mes_actual,
-        'diferencia': diferencia
+        'diferencia': diferencia,
+        'mes_actual': mes_actual
     })
 
 
 @login_required
 def ingresar_presupuesto(request):
+    
     if request.method == 'POST':
         form = PresupuestoForm(request.POST)
         if form.is_valid():
@@ -79,6 +81,7 @@ def ingresar_presupuesto(request):
 
 @login_required
 def agregar_gasto(request):
+    
     if request.method == 'POST':
         form = AgregarGastoForm(request.POST)
         if form.is_valid():
@@ -95,7 +98,9 @@ def agregar_gasto(request):
 
 @login_required
 def eliminar_gasto(request, gasto_id):
-    gastos = GastoMensual.objects.filter(usuario=request.user)
+    
+    mes_actual = datetime.date.today().replace(day=1)
+    gastos = GastoMensual.objects.filter(usuario=request.user, fecha__month=mes_actual.month, fecha__year=mes_actual.year).order_by('fecha')
     if request.method == 'POST':
         gasto_id = request.POST.get('gasto_id')
         gasto = get_object_or_404(GastoMensual, id=gasto_id)

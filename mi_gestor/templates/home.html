@@ -33,18 +33,22 @@
         <div class="subheader">
             <div class="block">
                 <h2 class="title2">Presupuesto Mensual</h2>
-                <p>Presupuesto para este mes: {{ presupuesto_mes_actual }} €</p>
-                <p>Presupuesto restante para este mes: {{ diferencia }} €</p>
+                <p>Presupuesto para este mes ({{ mes_actual|date:"F, Y"}}):<br>{{ presupuesto_mes_actual }} €</p>
+                <p>Presupuesto restante para este mes ({{ mes_actual|date:"F, Y" }}):<br>{{ diferencia }} €</p>
             </div>
             <div class="block">
                 <h2 class="title2">Gasto Mensual</h2>
-                <p>Gastos acumulados este mes: {{ total_mes_actual }} €</p>
+                <p>Gastos acumulados este mes ({{ mes_actual|date:"F, Y" }}):<br>{{ total_mes_actual }} €</p>
+            </div>
+            <div class="image-front">
+                <img src="{% static 'img/coins.png' %}" width="300px">
             </div>
         </div>
 
         <div class="table-container">
-            <h2 class="title2">Historial de Gastos</h2>
-            <table border="1">
+            <h2 class="title2">Historial de Gastos este Mes</h2>
+            <button id="toggleButton">Mostrar Historial</button>
+            <table id="tabla-gastos" border="1" style="display:none;">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -66,5 +70,8 @@
             </table>
         </div>
     </div>
+
+    <script src="{% static 'toggle.js' %}"></script>
+
 </body>
 </html>
