@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meses Previos</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'meses_previos_style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<h1>Meses Anteriores</h1>
+
+<div class="container">
+    {% for mes, gastos in meses_previos.items %}
+        <div class="mes-container">
+            <button class="toggle-btn">{{ mes }}</button>
+            <div class="gastos" style="display: none;">
+                <p>Presupuesto: {{ datos_mes.presupuesto }}</p>
+                <ul>
+                    {% for gasto in gastos %}
+                        <li>{{ gasto.fecha }} - {{ gasto.descripcion }} - {{ gasto.cantidad }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.toggle-btn').click(function() {
+            $(this).next('.gastos').slideToggle();
+        });
+    });
+</script>
+
+</body>
+</html>

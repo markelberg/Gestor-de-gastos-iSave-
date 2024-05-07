@@ -2,9 +2,8 @@ import matplotlib.pyplot as plt
 import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 
@@ -45,7 +44,7 @@ def home(request):
     total_mes_actual = round(gastos_mes_actual.aggregate(total_mes=Sum('cantidad'))['total_mes'] or 0, 2)
 
     diferencia = presupuesto_mes_actual - total_mes_actual
-
+    
     presupuesto_url = '/ingresar_presupuesto/'
     agregar_gasto_url = '/agregar_gasto/'
 
@@ -108,3 +107,22 @@ def eliminar_gasto(request, gasto_id):
         return redirect('mi_gestor:home')
     else:
         return render(request, 'eliminar_gasto.html', {'gastos': gastos, 'gasto_id': gasto_id})
+
+
+@login_required
+def meses_previos(request):
+    
+    fecha_actual = datetime.date.today()
+    year_actual = fecha_actual.year
+    month_actual = fecha_actual.month
+    
+    gastos_meses_anteriores = GastoMensual.objects.filter(fecha__year=year_actual, fecha__month__lt=month_actual).order_by('-fecha')
+    
+    meses_previos = {}
+    for gasto in gastos_meses_anteriores:
+        fecha = gasto.fecha.strftime('%B, %Y')
+        if fecha not in meses_previos:
+            meses_previos[fecha] = []
+        meses_previos[fecha].append(gasto)
+    
+    return render(request, 'meses_previos.html', {'meses_previos': meses_previos})

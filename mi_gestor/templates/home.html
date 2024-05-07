@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'home_style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <div class="header">
@@ -23,9 +24,10 @@
     <div class="sidebar">
         <h2 class="title-menu">Menú</h2>
         <ul>
-            <li><a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar/Editar Presupuesto</a></li>
+            <li><a href="{% url 'mi_gestor:ingresar_presupuesto' %}">Ingresar Presupuesto</a></li>
             <li><a href="{% url 'mi_gestor:agregar_gasto' %}">Agregar Gasto</a></li>
             <li><a href="{% url 'mi_gestor:eliminar_gasto' gastos.0.id %}">Eliminar Gasto</a></li>
+            <li><a href="{% url 'mi_gestor:meses_previos' %}">Meses Previos</a></li>
         </ul>
     </div>
 
