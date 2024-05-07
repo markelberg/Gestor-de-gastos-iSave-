@@ -1,1 +1,2 @@
-# Gestor_de_gastos
+# iSave
+Mi propio gestor de gastos
